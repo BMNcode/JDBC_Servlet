@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: jdbc_servlet
+    build:
+      context: services/postgres
+      dockerfile: Dockerfile.development
+    ports:
+      - "5477:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=exampleDB
+      - POSTGRES_PASSWORD=1111
+    volumes:
+      - C:\Program Files\PostgreSQL\dockerData
