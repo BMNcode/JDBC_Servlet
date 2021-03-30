@@ -12,7 +12,7 @@
             <AppenderRef ref="Console"/>
         </Logger>
 
-        <Logger name= "org.bmn.config.Props" level="debug" additivity="true">
+        <Logger name= "org.bmn.jdbc.config.Props" level="debug" additivity="true">
             <AppenderRef ref="Console"/>
         </Logger>
 

@@ -2,7 +2,8 @@ package org.bmn.model;
 
 import java.util.Objects;
 
-public class Item {
+public class Item implements Comparable<Item>{
+
     private String name;
 
     public Item() {
@@ -18,6 +19,11 @@ public class Item {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public int compareTo(Item o) {
+        return this.getName().compareTo(o.getName());
     }
 
     @Override
