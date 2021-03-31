@@ -4,16 +4,16 @@ import org.bmn.jdbc.config.DBConnection;
 import org.bmn.jdbc.repository.JdbcRepository;
 import org.bmn.model.Item;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.*;
 
 public class JdbcItemService implements JdbcRepository<Item, Long> {
 
     public static final String SQL_SELECT_ALL_ITEMS = "SELECT * FROM items";
     public static final String SQL_SELECT_ITEM_ID = "SELECT * FROM items WHERE id=?";
+    public static final String SQL_SELECT_ITEM_NAME = "SELECT * FROM items WHERE item_name like ?";
+
+    public static final String SQL_INSERT_ITEM = "INSERT INTO items VALUES (?)";
 
     @Override
     public List<Item> findAll() {
@@ -49,17 +49,47 @@ public class JdbcItemService implements JdbcRepository<Item, Long> {
     }
 
     @Override
-    public List<Item> findAllByValue(Item v) {
-        return null;
+    public List<Item> findAllByValue(String value) {
+        List<Item> items = new ArrayList<>();
+        try(Connection connection = DBConnection.getNewConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ITEM_NAME)) {
+            statement.setString(1, value+"%");
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                String v = rs.getString(2);
+                items.add(new Item(v));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return items;
     }
 
     @Override
     public <S extends Item> List<S> saveAll(Iterable<S> var1) {
+
         return null;
     }
 
     @Override
     public <S extends Item> S save(S var1) {
+        Long id = 0L;
+        try(Connection connection = DBConnection.getNewConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_INSERT_ITEM, Statement.RETURN_GENERATED_KEYS)) {
+
+            statement.setString(1, var1.getName());
+            int affectedRows = statement.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Creating item failed, no rows affected.");
+            }
+
+            ResultSet generatedKeys = statement.getGeneratedKeys();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return null;
     }
 
