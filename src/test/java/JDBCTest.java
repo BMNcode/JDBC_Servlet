@@ -54,11 +54,6 @@ public class JDBCTest {
 
     @Test
     public void saveItemTest() {
-        Item item = new Item("KПК");
-        new JdbcItemService().save(item);
-        List<Item> expected = new JdbcItemService().findAllByValue("KПК");
-        List<Item> actual = new ArrayList<>();
-        actual.add(new Item("KПК"));
-        assertEquals(expected, actual);
+        assertEquals(new JdbcItemService().save(new Item("КПК")), 1);
     }
 }

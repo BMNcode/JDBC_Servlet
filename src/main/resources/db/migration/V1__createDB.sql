@@ -1,5 +1,5 @@
 create table items (
-	id int8 not null,
+	id bigserial not null,
 	item_name varchar(255),
 	primary key (id)
 );

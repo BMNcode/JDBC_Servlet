@@ -13,7 +13,7 @@ public class JdbcItemService implements JdbcRepository<Item, Long> {
     public static final String SQL_SELECT_ITEM_ID = "SELECT * FROM items WHERE id=?";
     public static final String SQL_SELECT_ITEM_NAME = "SELECT * FROM items WHERE item_name like ?";
 
-    public static final String SQL_INSERT_ITEM = "INSERT INTO items VALUES (?)";
+    public static final String SQL_INSERT_ITEM = "INSERT INTO items (item_name) VALUES (?)";
 
     @Override
     public List<Item> findAll() {
@@ -72,25 +72,22 @@ public class JdbcItemService implements JdbcRepository<Item, Long> {
     }
 
     @Override
-    public <S extends Item> S save(S var1) {
-        Long id = 0L;
+    public int save(Item item) {
+
+        int affectedRows = 0;
+
         try(Connection connection = DBConnection.getNewConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_INSERT_ITEM, Statement.RETURN_GENERATED_KEYS)) {
+            PreparedStatement statement = connection.prepareStatement(SQL_INSERT_ITEM)) {
 
-            statement.setString(1, var1.getName());
-            int affectedRows = statement.executeUpdate();
+            statement.setString(1, item.getName());
 
-            if (affectedRows == 0) {
-                throw new SQLException("Creating item failed, no rows affected.");
-            }
-
-            ResultSet generatedKeys = statement.getGeneratedKeys();
+            affectedRows = statement.executeUpdate();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return null;
+        return affectedRows;
     }
 
     @Override

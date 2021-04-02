@@ -12,7 +12,7 @@ public interface JdbcRepository<T, ID> {
 
     <S extends T> List<S> saveAll(Iterable<S> var1);
 
-    <S extends T> S save(S var1);
+    int save(T var1);
 
     T findById(ID var1);
 
