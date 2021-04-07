@@ -1,4 +1,4 @@
-package org.bmn.model;
+package org.bmn.entity;
 
 import java.util.Objects;
 

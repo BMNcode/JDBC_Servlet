@@ -1,6 +1,6 @@
-import org.bmn.jdbc.config.DBConnection;
+import org.bmn.jdbc.util.DBConnection;
 import org.bmn.jdbc.service.JdbcItemService;
-import org.bmn.model.Item;
+import org.bmn.entity.Item;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
@@ -23,7 +22,7 @@ public class JDBCTest {
 
     @Test
     public void shouldGetJdbcConnection() throws SQLException, IOException {
-        try (Connection connection = new DBConnection().getNewConnection()) {
+        try (Connection connection = DBConnection.get()) {
             assertTrue(connection.isValid(1));
             assertFalse(connection.isClosed());
         }

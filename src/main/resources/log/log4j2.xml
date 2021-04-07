@@ -8,11 +8,11 @@
     </Appenders>
 
     <Loggers>
-        <Logger name= "org.bmn.model.Item" level="debug" additivity="true">
+        <Logger name= "org.bmn.entity.Item" level="debug" additivity="true">
             <AppenderRef ref="Console"/>
         </Logger>
 
-        <Logger name= "org.bmn.jdbc.config.Props" level="debug" additivity="true">
+        <Logger name= "org.bmn.jdbc.util.PropertiesUtil" level="debug" additivity="true">
             <AppenderRef ref="Console"/>
         </Logger>
 

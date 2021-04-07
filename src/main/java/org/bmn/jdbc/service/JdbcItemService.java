@@ -1,8 +1,8 @@
 package org.bmn.jdbc.service;
 
-import org.bmn.jdbc.config.DBConnection;
+import org.bmn.jdbc.util.DBConnection;
 import org.bmn.jdbc.repository.JdbcRepository;
-import org.bmn.model.Item;
+import org.bmn.entity.Item;
 
 import java.sql.*;
 import java.util.*;
@@ -18,7 +18,7 @@ public class JdbcItemService implements JdbcRepository<Item, Long> {
     @Override
     public List<Item> findAll() {
         List<Item> items = new ArrayList<>();
-        try (Connection connection = DBConnection.getNewConnection();
+        try (Connection connection = DBConnection.get();
              Statement statement = connection.createStatement()) {
             ResultSet rs = statement.executeQuery(SQL_SELECT_ALL_ITEMS);
             while (rs.next()) {
@@ -34,7 +34,7 @@ public class JdbcItemService implements JdbcRepository<Item, Long> {
     @Override
     public List<Item> findAllAndSort() {
         List<Item> items = new ArrayList<>();
-        try (Connection connection = DBConnection.getNewConnection();
+        try (Connection connection = DBConnection.get();
              Statement statement = connection.createStatement()) {
             ResultSet rs = statement.executeQuery(SQL_SELECT_ALL_ITEMS);
             while (rs.next()) {
@@ -51,7 +51,7 @@ public class JdbcItemService implements JdbcRepository<Item, Long> {
     @Override
     public List<Item> findAllByValue(String value) {
         List<Item> items = new ArrayList<>();
-        try(Connection connection = DBConnection.getNewConnection();
+        try(Connection connection = DBConnection.get();
             PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ITEM_NAME)) {
             statement.setString(1, value+"%");
             ResultSet rs = statement.executeQuery();
@@ -76,7 +76,7 @@ public class JdbcItemService implements JdbcRepository<Item, Long> {
 
         int affectedRows = 0;
 
-        try(Connection connection = DBConnection.getNewConnection();
+        try(Connection connection = DBConnection.get();
             PreparedStatement statement = connection.prepareStatement(SQL_INSERT_ITEM)) {
 
             statement.setString(1, item.getName());
@@ -93,7 +93,7 @@ public class JdbcItemService implements JdbcRepository<Item, Long> {
     @Override
     public Item findById(Long id) {
         Item item = null;
-        try (Connection connection = DBConnection.getNewConnection();
+        try (Connection connection = DBConnection.get();
              PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ITEM_ID)) {
 
             statement.setLong(1, id);
