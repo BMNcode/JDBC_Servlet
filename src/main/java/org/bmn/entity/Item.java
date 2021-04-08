@@ -4,6 +4,7 @@ import java.util.Objects;
 
 public class Item implements Comparable<Item>{
 
+    private Long id;
     private String name;
 
     public Item() {
@@ -11,6 +12,19 @@ public class Item implements Comparable<Item>{
 
     public Item(String name) {
         this.name = name;
+    }
+
+    public Item(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

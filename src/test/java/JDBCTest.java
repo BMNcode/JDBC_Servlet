@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -53,6 +54,31 @@ public class JDBCTest {
 
     @Test
     public void saveItemTest() {
-        assertEquals(new JdbcItemService().save(new Item("КПК")), 1);
+        assertEquals(new JdbcItemService().save(new Item("КПК")), new Item("КПК"));
+    }
+
+    @Test
+    public void saveAllItemTest() {
+        List<Item> expected = Arrays.asList(new Item("cvb"), new Item("cvb"), new Item("qwe"));
+        List<Item> actual = Arrays.asList(new Item("cvb"), new Item("cvb"), new Item("qwe"));
+        assertEquals(new JdbcItemService().saveAll(expected), actual);
+    }
+
+    @Test
+    public void existItemByIdTest() {
+
+        assertEquals(new JdbcItemService().existsById(6L), true);
+    }
+
+    @Test
+    public void deleteItemByIdTest() {
+
+        assertEquals(new JdbcItemService().deleteById(5L), true);
+    }
+
+    @Test
+    public void deleteItem() {
+
+        assertEquals(new JdbcItemService().delete(new Item("zxc")), true);
     }
 }
