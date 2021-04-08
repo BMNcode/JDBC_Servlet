@@ -78,7 +78,12 @@ public class JDBCTest {
 
     @Test
     public void deleteItem() {
-
         assertEquals(new JdbcItemService().delete(new Item("zxc")), true);
+    }
+
+    @Test
+    public void deleteAllItem() {
+        List<Item> expected = Arrays.asList(new Item("cvb"), new Item("cvb"), new Item("qwe"));
+        new JdbcItemService().deleteAll(expected);
     }
 }

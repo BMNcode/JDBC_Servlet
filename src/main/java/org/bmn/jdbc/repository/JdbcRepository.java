@@ -23,6 +23,4 @@ public interface JdbcRepository<T, ID> {
     boolean delete(T var1);
 
     void deleteAll(Iterable<? extends T> var1);
-
-    void deleteAll();
 }

@@ -1,6 +1,7 @@
 package org.bmn.jdbc.service;
 
 import org.bmn.entity.Item;
+import org.bmn.jdbc.exception.DaoException;
 import org.bmn.jdbc.repository.JdbcRepository;
 import org.bmn.jdbc.util.DBConnection;
 
@@ -21,6 +22,7 @@ public class JdbcItemService implements JdbcRepository<Item, Long> {
 
     public static final String SQL_DELETE_ITEM_BY_VALUE = "DELETE FROM Items WHERE item_name like ?";
     public static final String SQL_DELETE_ITEM_BY_ID = "DELETE FROM Items WHERE id = ?";
+    public static final String SQL_DELETE_ITEM_BY_NAME = "DELETE FROM Items WHERE item_name = ?";
 
     @Override
     public List<Item> findAll() {
@@ -34,7 +36,7 @@ public class JdbcItemService implements JdbcRepository<Item, Long> {
             }
             return items;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoException(e);
         }
 
     }
@@ -52,7 +54,7 @@ public class JdbcItemService implements JdbcRepository<Item, Long> {
             Collections.sort(items);
             return items;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoException(e);
         }
     }
 
@@ -69,7 +71,7 @@ public class JdbcItemService implements JdbcRepository<Item, Long> {
             }
             return items;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoException(e);
         }
     }
 
@@ -91,7 +93,7 @@ public class JdbcItemService implements JdbcRepository<Item, Long> {
             }
             return itemResult;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoException(e);
         }
     }
 
@@ -113,7 +115,7 @@ public class JdbcItemService implements JdbcRepository<Item, Long> {
             }
             return item;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoException(e);
         }
     }
 
@@ -129,8 +131,8 @@ public class JdbcItemService implements JdbcRepository<Item, Long> {
                 String name = rs.getString(2);
                 item = new Item(name);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new DaoException(e);
         }
         return item;
     }
@@ -146,7 +148,7 @@ public class JdbcItemService implements JdbcRepository<Item, Long> {
             }
             return false;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoException(e);
         }
     }
 
@@ -157,7 +159,7 @@ public class JdbcItemService implements JdbcRepository<Item, Long> {
             statement.setLong(1, id);
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoException(e);
         }
 
     }
@@ -169,18 +171,46 @@ public class JdbcItemService implements JdbcRepository<Item, Long> {
             statement.setString(1, item.getName());
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoException(e);
         }
 
     }
 
     @Override
-    public void deleteAll(Iterable<? extends Item> var1) {
+    public void deleteAll(Iterable<? extends Item> items) {
+        Connection connection = DBConnection.get();
+        PreparedStatement statement = null;
+        try {
+            statement = connection.prepareStatement(SQL_DELETE_ITEM_BY_NAME);
+            connection.setAutoCommit(false);
+            Iterator iterator = items.iterator();
+            while (iterator.hasNext()) {
+                Item item = (Item)iterator.next();
+                statement.setString(1, item.getName());
+                statement.executeUpdate();
+            }
+            connection.commit();
+        } catch (SQLException e) {
+            if (connection != null) {
+                try {
+                    connection.rollback();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
 
-    }
+                if (statement != null) {
+                    statement.close();
+                }
 
-    @Override
-    public void deleteAll() {
-
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
     }
 }
