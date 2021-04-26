@@ -36,7 +36,6 @@ public class JdbcItemService implements JdbcRepository<Item, Long> {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     @Override
